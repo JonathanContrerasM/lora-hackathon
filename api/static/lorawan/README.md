@@ -1,4 +1,4 @@
-# lorawan
+# loraw
 
 ## Project setup
 ```
