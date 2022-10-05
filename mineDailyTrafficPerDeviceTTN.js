@@ -45,7 +45,22 @@ packets.forEach(function (p) {
       }
     }
   }
-  senders[senderAddr].packets.push(p)
+  console.log(p.data.message.settings)
+  try {
+    var spreading_factor = p.data.message.settings.data_rate.lora.spreading_factor
+    var code_rate = p.data.settings.data_rate.lora.coding_rate
+  } catch (e) {
+    spreading_factor = 'N/A'
+    code_rate = 'N/A'
+  }
+  senders[senderAddr].packets.push({
+    "time": p.time,
+    "device_address": senderAddr,
+    "spreading_factor": spreading_factor,
+    "code_rate": code_rate,
+    "rssi": p.data.message.rx_metadata[0].rssi,
+    "snr": p.data.message.rx_metadata[0].snr
+  })
   senders[senderAddr].nrPackets++
    
   var mtype = p.data.message.payload.m_hdr.m_type

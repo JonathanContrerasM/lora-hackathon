@@ -96,6 +96,7 @@
 </template>
 
 <script>
+const host = '10.0.2.15'
 import { Bar, Line } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
 
@@ -119,19 +120,19 @@ export default {
   },
   watch: {
     selectedDay: async function (day) {
-      const response = await fetch('http://localhost:3000/summaries/' + day);
+      const response = await fetch(`http://${host}:3000/summaries/` + day);
       const summaries = await response.json();
       this.devices = summaries
     },
     selectedDevice: async function (device) {
-      const response = await fetch('http://localhost:3000/devices/' + device + '/' + this.selectedDay + '?freq=' + this.selectedFreq);
+      const response = await fetch(`http://${host}:3000/devices/` + device + '/' + this.selectedDay + '?freq=' + this.selectedFreq);
       const deviceInfo = await response.json();
       this.deviceInfo = deviceInfo
     }
   },
   mounted: async function () {
     window.app = this
-    const response = await fetch('http://localhost:3000/days');
+    const response = await fetch(`http://${host}:3000/days`);
     const days = await response.json();
     this.days = days
   },
