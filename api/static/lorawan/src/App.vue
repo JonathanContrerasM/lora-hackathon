@@ -38,11 +38,11 @@
           <h2>Device {{selectedDevice.replace(/.{2}/g, '$&-').slice(0, -1) || '...'}}</h2>
           <h3>Overview</h3>
           <span v-if="findings">
-          This device may be <span v-if="findings.sensor">a sensor device</span>
+          This device may be <span v-if="findings.sensor">a <span v-if="findings.live">live</span> sensor device</span>
           <span v-if="findings.actuator">an actuator device</span>
           <span v-if="findings.passive">a passive device</span>
-          <span v-if="findings.proprietary">, using a proprietary protocol</span>.</span>
-          <h4>Packets per Hours</h4>
+          <span v-if="findings.proprietary"> using a proprietary protocol</span>.</span>
+          <h4>Packets per Hour</h4>
           <linechart v-if="selectedDevice"
             :chart-data="chartArrival"
             :height="50"
@@ -143,6 +143,7 @@ export default {
     findings: function () {
       var findings = {
         proprietary: false,
+        live: false,
         sensor: false,
         actuator: false,
         passive: false
@@ -161,22 +162,31 @@ export default {
       findings.sensor = sensor
       var actuator = downTraffic && !upTraffic
       findings.actuator = actuator
+
+      if(sensor) {
+        var hours = new Array(24).fill(0)
+        this.deviceInfo.packets.forEach(e => hours[new Date(e.time).getHours()]++)
+        if (hours.filter(e => e>0).length > 22) {
+          console.log(this)
+          findings.live = true
+        }
+      }
       
-      var passiveDevice = directions['000'] > 0 || directions['001'] > 0
+      var passiveDevice = directions['000'] > 0 || directions['001'] > 0 || directions['110'] > 0
+
       findings.passive = passiveDevice
       return findings
     },
     chartData: function () {
-      var app = this
-      if(this.deviceInfo.directions) {
-        console.log(app.deviceInfo)
+      var directions = this.deviceInfo.directions
+      if(directions) {
         var data = {
           labels: [ 'Join Request', 'Join Accept', 'Unconfirmed Up', 'Unconfirmed Down', 'Confirmed Up', 'Confirmed Down', 'Rejoin Request', 'Proprietary' ],
           datasets: [
             {
               label: 'Message Types',
               backgroundColor: '#f87979',
-              data: Object.values(app.deviceInfo.directions)
+              data: [directions['000'], directions['001'], directions['010'], directions['011'], directions['100'], directions['101'], directions['110'], directions['111']]
             }
           ]
         }
@@ -200,6 +210,7 @@ export default {
             label: 'Packets per Hour',
             backgroundColor: '#f87979',
             borderColor: '#e8a7a2',
+            borderWidth: '1',
             color: '#e8a7a2',
             data: hours
           }
