@@ -68,6 +68,12 @@ var summary = {
   multiple: Object.keys(multiplePerDay),
 }
 
-fs.writeFileSync(analysis + 'once-per-day.json', JSON.stringify(oncePerDay), () => {})
-fs.writeFileSync(analysis + 'multiple-per-day.json', JSON.stringify(multiplePerDay), () => {})
-fs.writeFileSync(analysis + 'summary.json', JSON.stringify(summary), () => {})
+//fs.writeFileSync(analysis + 'once-per-day.json', JSON.stringify(oncePerDay), () => {})
+console.log('once')
+console.log(oncePerDay)
+//fs.writeFileSync(analysis + 'multiple-per-day.json', JSON.stringify(multiplePerDay), () => {})
+console.log('multiple')
+console.log(multiplePerDay)
+//fs.writeFileSync(analysis + 'summary.json', JSON.stringify(summary), () => {})
+console.log('summary')
+console.log(summary)
