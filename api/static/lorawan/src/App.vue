@@ -8,7 +8,7 @@
         <section>
           <h2>Days</h2>
           <div class="days">
-            <div v-for="day in days" :key="day" @click="selectedDay = day">{{day.replaceAll('_', '.')}}</div>
+            <div v-for="day in days.filter(d => { return d.length > 0})" :key="day" @click="selectedDay = day">{{day.replaceAll('_', '.')}}</div>
           </div>
         </section>
 
@@ -16,7 +16,7 @@
           <h2>Devices</h2>
 
           <div class="devices-multiple">
-            <h3>Multiple Message per Day</h3>
+            <h3>Multiple Messages per Day</h3>
             <div class="devices">
               <div v-for="device in devices.multiple" :key="device"
                 @click="selectedDevice = device; selectedFreq = 'multiple'">{{ device.replace(/.{2}/g, '$&-').slice(0, -1) }}</div>
@@ -37,16 +37,20 @@
         <section>
           <h2>Device {{selectedDevice.replace(/.{2}/g, '$&-').slice(0, -1) || '...'}}</h2>
           <h3>Overview</h3>
-          <bar
-            :chart-options="chartOptions"
+          <span v-if="findings">
+          This device may be <span v-if="findings.sensor">a sensor device</span>
+          <span v-if="findings.actuator">an actuator device</span>
+          <span v-if="findings.passive">a passive device</span>
+          <span v-if="findings.proprietary">, using a proprietary protocol</span>.</span>
+          <h4>Packets per Hours</h4>
+          <linechart v-if="selectedDevice"
+            :chart-data="chartArrival"
+            :height="50"
+          />
+          <h4>Message Types</h4>
+          <bar v-if="selectedDevice"
             :chart-data="chartData"
-            :chart-id="chartId"
-            :dataset-id-key="datasetIdKey"
-            :plugins="plugins"
-            :css-classes="cssClasses"
-            :styles="styles"
-            :width="width"
-            :height="height"
+            :height="50"
           />
           <h3>Packets</h3>
           <div class="devinfo">
@@ -92,13 +96,17 @@
 </template>
 
 <script>
-import { Bar } from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs/legacy'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
 export default {
   name: 'App',
 
   data: function() {
     return {
+       barheight: 200,
        days: [
          1,2,3
        ],
@@ -128,7 +136,77 @@ export default {
     this.days = days
   },
   components: {
-    'bar': Bar
+    'bar': Bar,
+    'linechart': Line
+  },
+  computed: {
+    findings: function () {
+      var findings = {
+        proprietary: false,
+        sensor: false,
+        actuator: false,
+        passive: false
+      }
+      if(!this.deviceInfo.directions) {
+        return null
+      }
+      var directions = this.deviceInfo.directions
+      var propTraffic = directions['111'] > 0
+      findings.proprietary = propTraffic
+      
+      var upTraffic = directions['010'] > 0 || directions['100'] > 0
+      var downTraffic = directions['011'] > 0 || directions['101'] > 0
+      
+      var sensor = upTraffic && !downTraffic
+      findings.sensor = sensor
+      var actuator = downTraffic && !upTraffic
+      findings.actuator = actuator
+      
+      var passiveDevice = directions['000'] > 0 || directions['001'] > 0
+      findings.passive = passiveDevice
+      return findings
+    },
+    chartData: function () {
+      var app = this
+      if(this.deviceInfo.directions) {
+        console.log(app.deviceInfo)
+        var data = {
+          labels: [ 'Join Request', 'Join Accept', 'Unconfirmed Up', 'Unconfirmed Down', 'Confirmed Up', 'Confirmed Down', 'Rejoin Request', 'Proprietary' ],
+          datasets: [
+            {
+              label: 'Message Types',
+              backgroundColor: '#f87979',
+              data: Object.values(app.deviceInfo.directions)
+            }
+          ]
+        }
+        return data
+      }
+      return {}
+    },
+    chartArrival: function () {
+      if(!this.deviceInfo || !this.deviceInfo.packets) {
+        return {}
+      }
+      var hours = new Array(24).fill(0)
+      this.deviceInfo.packets.forEach(e => hours[new Date(e.time).getHours()]++)
+      
+      var data = {
+        labels: ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM',
+          '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
+          '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'],
+        datasets: [
+          {
+            label: 'Packets per Hour',
+            backgroundColor: '#f87979',
+            borderColor: '#e8a7a2',
+            color: '#e8a7a2',
+            data: hours
+          }
+        ]
+      }
+      return data
+    }
   }
 }
 </script>
@@ -149,18 +227,22 @@ body {
 .l,
 .r {
   flex-grow: 1;
-  flex-basis: 6;
   margin-bottom: 0;
 }
 .l {
-  flex-basis: 40%;
+  flex-basis: 30%;
 }
 
 h2 {
   margin-bottom: 0.5em;
 }
+
 h3 {
   margin-bottom: 0.25em;
+}
+
+h4 {
+  margin-bottom: 0.1em;
 }
 
 .l > section {
@@ -172,7 +254,7 @@ h3 {
 }
 
 .r {
-  flex-basis: 60%;
+  flex-basis: 70%;
 }
 
 .days {
@@ -195,7 +277,7 @@ h3 {
 }
 
 .devinfo {
-  height: 80vh;
+  height: 20vh;
   overflow: auto;
 }
 </style>
