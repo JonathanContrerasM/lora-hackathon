@@ -14,19 +14,20 @@
 
         <section>
           <h2>Devices</h2>
-          <div class="devices-once">
-            <h3>One Message per Day</h3>
-            <div class="devices">
-              <div v-for="device in devices.once" :key="device" @click="selectedDevice = device; selectedFreq = 'once'">
-                {{device}}</div>
-            </div>
-          </div>
 
           <div class="devices-multiple">
             <h3>Multiple Message per Day</h3>
             <div class="devices">
               <div v-for="device in devices.multiple" :key="device"
-                @click="selectedDevice = device; selectedFreq = 'multiple'">{{device}}</div>
+                @click="selectedDevice = device; selectedFreq = 'multiple'">{{ device.replace(/.{2}/g, '$&-').slice(0, -1) }}</div>
+            </div>
+          </div>
+
+          <div class="devices-once">
+            <h3>One Message per Day</h3>
+            <div class="devices">
+              <div v-for="device in devices.once" :key="device" @click="selectedDevice = device; selectedFreq = 'once'">
+                {{ device.replace(/.{2}/g, '$&-').slice(0, -1) }}</div>
             </div>
           </div>
         </section>
@@ -34,7 +35,19 @@
 
       <section class="r">
         <section>
-          <h2>Device {{selectedDevice || '...'}}</h2>
+          <h2>Device {{selectedDevice.replace(/.{2}/g, '$&-').slice(0, -1) || '...'}}</h2>
+          <h3>Overview</h3>
+          <bar
+            :chart-options="chartOptions"
+            :chart-data="chartData"
+            :chart-id="chartId"
+            :dataset-id-key="datasetIdKey"
+            :plugins="plugins"
+            :css-classes="cssClasses"
+            :styles="styles"
+            :width="width"
+            :height="height"
+          />
           <h3>Packets</h3>
           <div class="devinfo">
             <div v-for="p in deviceInfo.packets" :key="p.time">
@@ -79,21 +92,23 @@
 </template>
 
 <script>
+import { Bar } from 'vue-chartjs'
 
 export default {
   name: 'App',
+
   data: function() {
-return {
-    days: [
-      1,2,3
-    ],
-    selectedDay: '',
-    selectedDevice: '',
-    selectedFreq: '',
-    deviceInfo: {},
-    devices: ['a', 'b']
-  };
-},
+    return {
+       days: [
+         1,2,3
+       ],
+       selectedDay: '',
+       selectedDevice: '',
+       selectedFreq: '',
+       deviceInfo: {},
+       devices: ['a', 'b']
+    }
+  },
   watch: {
     selectedDay: async function (day) {
       const response = await fetch('http://localhost:3000/summaries/' + day);
@@ -111,6 +126,9 @@ return {
     const response = await fetch('http://localhost:3000/days');
     const days = await response.json();
     this.days = days
+  },
+  components: {
+    'bar': Bar
   }
 }
 </script>
@@ -132,21 +150,43 @@ body {
 .r {
   flex-grow: 1;
   flex-basis: 6;
-  flex-basis: 50%;
+  margin-bottom: 0;
+}
+.l {
+  flex-basis: 40%;
+}
+
+h2 {
+  margin-bottom: 0.5em;
+}
+h3 {
+  margin-bottom: 0.25em;
+}
+
+.l > section {
+  margin-bottom: 1em;
+}
+
+.r > section {
+  margin-bottom: 1em;
 }
 
 .r {
-  flex-basis: 4;
+  flex-basis: 60%;
 }
 
 .days {
-  height: calc(40vh - 2em);
+  height: calc(30vh - 2em);
   overflow: auto;
 }
 
 .devices {
   height: calc(20vh - 2em);
   overflow: auto;
+}
+
+.days, .devices {
+  margin-right: 1em;
 }
 
 .tuple {
