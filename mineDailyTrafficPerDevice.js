@@ -45,7 +45,7 @@ packets.forEach(function (p) {
   if (senders[p.device_address].gateways[p.gateway]) {
     senders[p.device_address].gateways[p.gateway]++
   } else {
-    senders[p.device_address].gateways[p.gateway] = 0
+    senders[p.device_address].gateways[p.gateway] = 1
   }
 })
 

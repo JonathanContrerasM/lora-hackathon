@@ -17,66 +17,63 @@
           <div class="devices-once">
             <h3>One Message per Day</h3>
             <div class="devices">
-              <div v-for="device in devices.once" :key="device" @click="selectedDevice = device; selectedFreq = 'once'">{{device}}</div>
+              <div v-for="device in devices.once" :key="device" @click="selectedDevice = device; selectedFreq = 'once'">
+                {{device}}</div>
             </div>
           </div>
+
           <div class="devices-multiple">
             <h3>Multiple Message per Day</h3>
             <div class="devices">
-              <div v-for="device in devices.multiple" :key="device" @click="selectedDevice = device; selectedFreq = 'multiple'">{{device}}</div>
+              <div v-for="device in devices.multiple" :key="device"
+                @click="selectedDevice = device; selectedFreq = 'multiple'">{{device}}</div>
             </div>
           </div>
         </section>
-
       </section>
 
       <section class="r">
-
         <section>
           <h2>Device {{selectedDevice || '...'}}</h2>
-            <h3>Packets</h3>
-            <div class="devinfo">
-              <div v-for="p in deviceInfo.packets" :key="p.time">
-                <div class="tuple">
-                  <div>Arrival</div>
-                  <div>{{new Date(p.time).toLocaleTimeString()}}</div>
-                </div>
-
-                <div class="tuple">
-                  <div>Bandwidth</div>
-                  <div>{{p.bandwidth}}</div>
-                </div>
-
-                <div class="tuple">
-                  <div>Spreading Factor</div>
-                  <div>{{p.spreading_factor}}</div>
-                </div>
-
-                <div class="tuple">
-                  <div>Code Rate</div>
-                  <div>{{p.code_rate}}</div>
-                </div>
-
-                <div class="tuple">
-                  <div>RSSI</div>
-                  <div>{{p.rssi}}</div>
-                </div>
-
-                <div class="tuple">
-                  <div>SNR</div>
-                  <div>{{p.snr}}</div>
-                </div>
-                <hr>
+          <h3>Packets</h3>
+          <div class="devinfo">
+            <div v-for="p in deviceInfo.packets" :key="p.time">
+              <div class="tuple">
+                <div>Arrival</div>
+                <div>{{new Date(p.time).toLocaleTimeString()}}</div>
               </div>
-              <div v-for="att in deviceInfo" :key="att">
+
+              <div class="tuple">
+                <div>Bandwidth</div>
+                <div>{{p.bandwidth}}</div>
               </div>
+
+              <div class="tuple">
+                <div>Spreading Factor</div>
+                <div>{{p.spreading_factor}}</div>
+              </div>
+
+              <div class="tuple">
+                <div>Code Rate</div>
+                <div>{{p.code_rate}}</div>
+              </div>
+
+              <div class="tuple">
+                <div>RSSI</div>
+                <div>{{p.rssi}}</div>
+              </div>
+
+              <div class="tuple">
+                <div>SNR</div>
+                <div>{{p.snr}}</div>
+              </div>
+              <hr>
+            </div>
+            <div v-for="att in deviceInfo" :key="att">
             </div>
           </div>
-
         </section>
-
       </section>
-
     </div>
   </div>
 </template>
@@ -85,39 +82,78 @@
 
 export default {
   name: 'App',
+  data: function() {
+return {
+    days: [
+      1,2,3
+    ],
+    selectedDay: '',
+    selectedDevice: '',
+    selectedFreq: '',
+    deviceInfo: {},
+    devices: ['a', 'b']
+  };
+},
+  watch: {
+    selectedDay: async function (day) {
+      const response = await fetch('http://localhost:3000/summaries/' + day);
+      const summaries = await response.json();
+      this.devices = summaries
+    },
+    selectedDevice: async function (device) {
+      const response = await fetch('http://localhost:3000/devices/' + device + '/' + this.selectedDay + '?freq=' + this.selectedFreq);
+      const deviceInfo = await response.json();
+      this.deviceInfo = deviceInfo
+    }
+  },
+  mounted: async function () {
+    window.app = this
+    const response = await fetch('http://localhost:3000/days');
+    const days = await response.json();
+    this.days = days
+  }
 }
 </script>
 
 <style>
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
 }
+
 #app {
   display: flex;
   padding: 1em;
   box-sizing: border-box;
 }
-.l, .r {
+
+.l,
+.r {
   flex-grow: 1;
   flex-basis: 6;
   flex-basis: 50%;
 }
+
 .r {
   flex-basis: 4;
 }
+
 .days {
   height: calc(40vh - 2em);
   overflow: auto;
 }
+
 .devices {
   height: calc(20vh - 2em);
   overflow: auto;
 }
+
 .tuple {
   display: flex;
   justify-content: space-between;
 }
+
 .devinfo {
   height: 80vh;
   overflow: auto;
