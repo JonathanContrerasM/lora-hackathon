@@ -10,7 +10,7 @@
     <home @device="log" @mobile="logmobile"></home>
     <suggestion></suggestion>
     <where :dev="selectedDevice" :mobile="mobile"></where>
-    <when></when>
+    <when :dev="selectedDevice"></when>
     <what></what>
   </div>
 </template>
