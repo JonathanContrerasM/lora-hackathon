@@ -12,6 +12,16 @@
         </div>
       </div>
       <button for="dataset" @click="upload">Upload dataset</button>
+      <div class="dimension devlist">
+        <div v-for="dev in deviceList" :key="dev" @click="select(dev)">
+          <div v-if="dev === selectedDevice" style="font-weight: bold">
+          {{ dev.replace(/.{2}/g, '$&-').slice(0, -1)  }} 
+          </div>
+          <div v-else>
+          {{ dev.replace(/.{2}/g, '$&-').slice(0, -1)  }} 
+          </div>
+        </div>
+      </div>
       <div class="dimension">
         <div><a href="#what">→ What</a></div>
         <div><img src="/what.png" class="logo"></div>
@@ -35,22 +45,36 @@
 export default {
   name: 'HomeView',
   data: function() {
-    return {}
+    return {
+      deviceList: [],
+      selectedDevice: ''
+    }
   },
   components: {
   },
   methods: {
-    upload: function upload () {
+    select: function (dev) {
+      this.selectedDevice = dev
+      this.$emit('device', dev)
+    },
+    upload: async function upload () {
       var input = this.$refs.myFiles.files[0]
       console.log('input')
 
       var data = new FormData()
       data.append('file', input)
 
-      fetch('http://localhost:3000/upload', {
+      var res = await fetch('http://192.168.18.177:5002/raw_parser', {
         method: 'POST',
-        body: data
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: input
       })
+      console.log(res)
+      var json = await res.json()
+      console.log(json)
+      this.deviceList = json
     }
   }
 }
@@ -82,10 +106,12 @@ export default {
   margin-bottom: auto;
 }
 .datasetbox > div:nth-child(2) {
- display: flex;
- justify-content: center;
- align-content: center;
- align-items: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
-
+.devlist {
+  flex-direction: column;
+}
 </style>

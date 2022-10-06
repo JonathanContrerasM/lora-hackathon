@@ -7,7 +7,7 @@
       <a href="#when">When</a>
       <a href="#suggestion">Suggestion</a>
     </nav>
-    <home></home>
+    <home @device="log"></home>
     <suggestion></suggestion>
     <where></where>
     <when></when>
@@ -26,7 +26,9 @@ import What from './What.vue'
 export default {
   name: 'App',
   data: function() {
-    return {}
+    return {
+      selectedDevice: ''
+    }
   },
   components: {
     home: Home,
@@ -34,6 +36,11 @@ export default {
     where: Where,
     suggestion: Suggestion,
     when: When
+  },
+  methods: {
+    log: function (device) {
+      this.selectedDevice = device
+    }
   }
 }
 </script>
