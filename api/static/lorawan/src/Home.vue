@@ -4,14 +4,14 @@
       <h1>OSINT LoRA Platform</h1>
       <div class="datasetbox">
         <div>
-          <label for="dataset">Upload dataset</label>
-          <input type="file" id="dataset" name="dataset" accept="application/JSON">
+          <input ref="myFiles" type="file" id="dataset" name="dataset" accept="application/JSON">
         </div>
         <div>
-          <label for="mobile">Mobile</label>
+          <label for="mobile" style="margin-right: 1em;">Mobile</label>
           <input type="checkbox" id="mobile" name="mobile">
         </div>
       </div>
+      <button for="dataset" @click="upload">Upload dataset</button>
       <div class="dimension">
         <div><a href="#what">→ What</a></div>
         <div><img src="/what.png" class="logo"></div>
@@ -38,6 +38,20 @@ export default {
     return {}
   },
   components: {
+  },
+  methods: {
+    upload: function upload () {
+      var input = this.$refs.myFiles.files[0]
+      console.log('input')
+
+      var data = new FormData()
+      data.append('file', input)
+
+      fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: data
+      })
+    }
   }
 }
 </script>
@@ -67,4 +81,11 @@ export default {
   margin-top: auto;
   margin-bottom: auto;
 }
+.datasetbox > div:nth-child(2) {
+ display: flex;
+ justify-content: center;
+ align-content: center;
+ align-items: center;
+}
+
 </style>
