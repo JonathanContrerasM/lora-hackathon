@@ -23,12 +23,12 @@
         </div>
       </div>
       <div class="dimension">
-        <div><a href="#what">→ What</a></div>
-        <div><img src="/what.png" class="logo"></div>
-      </div>
-      <div class="dimension">
         <div><a href="#where">→ Where</a></div>
         <div><img src="/map.png" class="logo"></div>
+      </div>
+      <div class="dimension">
+        <div><a href="#what">→ What</a></div>
+        <div><img src="/what.png" class="logo"></div>
       </div>
       <div class="dimension">
         <div class="whenwheretitle"><a href="#when">→ When+Where</a></div>

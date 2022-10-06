@@ -2,16 +2,16 @@
   <div class="wrapper">
     <nav>
       <a href="#">Home</a>
-      <a href="#what">What</a>
       <a href="#where">Where</a>
-      <a href="#when">When</a>
+      <a href="#what">What</a>
+      <a href="#when">When+Where</a>
       <a href="#suggestion">Suggestion</a>
     </nav>
     <home @device="log" @mobile="logmobile"></home>
-    <suggestion></suggestion>
     <where :dev="selectedDevice" :mobile="mobile"></where>
+    <what @findings="logfindings"></what>
     <when :dev="selectedDevice"></when>
-    <what></what>
+    <suggestion :dev="selectedDevice" :findings="findings"></suggestion>
   </div>
 </template>
 
@@ -28,7 +28,8 @@ export default {
   data: function() {
     return {
       selectedDevice: '',
-      mobile: ''
+      mobile: '',
+      findings: {}
     }
   },
   components: {
@@ -39,6 +40,10 @@ export default {
     when: When
   },
   methods: {
+    logfindings: function (findings) {
+      console.log('app fidings:', findings)
+      this.findings = findings
+    },
     log: function (device) {
       this.selectedDevice = device
       console.log('home: device changed', this.selectedDevice)

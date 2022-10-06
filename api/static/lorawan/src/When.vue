@@ -2,10 +2,9 @@
   <div class="wrapper whenwrap" id="when">
     <div class="wheninfo">
       <h2>Device {{dev}}</h2>
-      <h3><a :href="twurl">→ Twitter</a></h3>
+      <h3><a :href="twurl" target="_blank">→ Twitter</a></h3>
       <h3>YouTube</h3>
       <div v-for="(el, i) of ytjson" :key="i">
-        <h4 style="margin-right: 2em;">Owner</h4> <span style="margin-right: 1em;">{{el.channel_owner}}</span>
 
       <iframe :src="el.code"
        width="280" height="150" frameborder="0" allowfullscreen></iframe>

@@ -36,7 +36,7 @@
       <section class="r">
         <section>
           <h2>Device {{selectedDevice.replace(/.{2}/g, '$&-').slice(0, -1) || '...'}}</h2>
-          <h3>Overview</h3>
+          <!--h3>Overview</h3-->
           <span v-if="findings">
           This device may be <span v-if="findings.sensor">a <span v-if="findings.live">live</span> sensor device</span>
           <span v-if="findings.actuator">an actuator device</span>
@@ -176,6 +176,7 @@ export default {
       var passiveDevice = directions['000'] > 0 || directions['001'] > 0 || directions['110'] > 0
 
       findings.passive = passiveDevice
+      this.$emit('findings', findings)
       return findings
     },
     chartData: function () {
