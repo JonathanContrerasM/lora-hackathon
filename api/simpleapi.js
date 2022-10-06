@@ -1,10 +1,17 @@
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const fs = require('fs')
-const app = express()
-const port = 3000
 const { exec } = require('child_process')
 const cors = require('cors')
+
+const app = express()
+const port = 3000
+
 app.use(cors())
+
+app.use(fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024 },
+}));
 
 app.get('/days', (req, res) => {
   exec('cd ..; ls *jsonsummary.json', (err, stdout, stderr) => {
@@ -40,6 +47,11 @@ app.get('/devices/:device/:day', (req, res) => {
     var dev = devices[deviceAddr]
     res.json(dev)
   })
+})
+
+app.post('/upload', function(req, res) {
+  console.log(req.files)
+  req.files.file.mv('../uploaded.json')
 })
 
 app.use(express.static('static'))
