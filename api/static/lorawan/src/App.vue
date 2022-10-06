@@ -9,7 +9,7 @@
     </nav>
     <home @device="log"></home>
     <suggestion></suggestion>
-    <where></where>
+    <where :dev="selectedDevice"></where>
     <when></when>
     <what></what>
   </div>
@@ -40,6 +40,7 @@ export default {
   methods: {
     log: function (device) {
       this.selectedDevice = device
+      console.log('home: device changed', this.selectedDevice)
     }
   }
 }
