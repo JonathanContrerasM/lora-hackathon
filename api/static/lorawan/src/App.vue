@@ -2,13 +2,13 @@
   <div class="wrapper">
     <nav>
       <a href="#">Home</a>
-      <a href="#map">Map</a>
+      <a href="#what">What</a>
       <a href="#where">Where</a>
       <a href="#when">When</a>
-      <a href="#what">What</a>
+      <a href="#suggestion">Suggestion</a>
     </nav>
     <home></home>
-    <devmap></devmap>
+    <suggestion></suggestion>
     <where></where>
     <when></when>
     <what></what>
@@ -17,7 +17,7 @@
 
 <script>
 import Home from './Home.vue'
-import Map from './Map.vue'
+import Suggestion from './Suggestion.vue'
 import Where from './Where.vue'
 import When from './When.vue'
 import What from './What.vue'
@@ -31,8 +31,8 @@ export default {
   components: {
     home: Home,
     what: What,
-    devmap: Map,
     where: Where,
+    suggestion: Suggestion,
     when: When
   }
 }
