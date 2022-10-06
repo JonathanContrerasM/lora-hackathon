@@ -7,9 +7,9 @@
       <a href="#when">When</a>
       <a href="#suggestion">Suggestion</a>
     </nav>
-    <home @device="log"></home>
+    <home @device="log" @mobile="logmobile"></home>
     <suggestion></suggestion>
-    <where :dev="selectedDevice"></where>
+    <where :dev="selectedDevice" :mobile="mobile"></where>
     <when></when>
     <what></what>
   </div>
@@ -27,7 +27,8 @@ export default {
   name: 'App',
   data: function() {
     return {
-      selectedDevice: ''
+      selectedDevice: '',
+      mobile: ''
     }
   },
   components: {
@@ -41,6 +42,10 @@ export default {
     log: function (device) {
       this.selectedDevice = device
       console.log('home: device changed', this.selectedDevice)
+    },
+    logmobile: function (mobile) {
+      this.mobile = mobile
+      console.log('home: mobile changed', this.mobile)
     }
   }
 }

@@ -25,10 +25,12 @@ export default {
   computed: {
     iframeurl: function () {
       if(!this.dev) { return '' }
-      return `http://192.168.18.177:5002/location_map_dynamic?device=${this.dev}`
+      console.log('iframeurl', this.mobile)
+      var staticMap = this.mobile ? 'dynamic': 'static'
+      return `http://192.168.18.177:5002/location_map_${staticMap}?device=${this.dev}`
     }
   },
-  props: ['dev'],
+  props: ['dev', 'mobile'],
   mounted: function () {
     console.log(this.dev)
   }

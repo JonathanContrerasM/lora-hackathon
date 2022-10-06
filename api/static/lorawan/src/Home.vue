@@ -8,7 +8,7 @@
         </div>
         <div>
           <label for="mobile" style="margin-right: 1em;">Mobile</label>
-          <input type="checkbox" id="mobile" name="mobile">
+          <input type="checkbox" id="mobile" name="mobile" v-model="mobile">
         </div>
       </div>
       <button for="dataset" @click="upload">Upload dataset</button>
@@ -47,10 +47,16 @@ export default {
   data: function() {
     return {
       deviceList: [],
-      selectedDevice: ''
+      selectedDevice: '',
+      mobile: ''
     }
   },
   components: {
+  },
+  watch: {
+    mobile: function () {
+      this.$emit('mobile', this.mobile)
+    }
   },
   methods: {
     select: function (dev) {
