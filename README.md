@@ -6,11 +6,6 @@ Clone repo
 ```
 git@github.com:jvdassen/lora-hackathon.git
 ```
-Checkout branch
-
-```
-git checkout vertical
-```
 
 Optional: If you want more datasets, make sure they are in the right format (see `04_10_2022.csv.json`), named correctly (ie start with date '04_10_2022.something') and only contains data for one day. For example, copy `trajectory.json` into two files containing packets for the respective days and name them appropriately. If the data is coming from TTN process it with `node mineDailyTrafficPerDeviceTTN 04_10_2022.csv.json 04_10_2022.csv.json`.
 
