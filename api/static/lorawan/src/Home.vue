@@ -70,7 +70,7 @@ export default {
       var data = new FormData()
       data.append('file', input)
 
-      var res = await fetch('http://192.168.18.177:5002/raw_parser', {
+      var res = await fetch('http://localhost:5002/raw_parser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

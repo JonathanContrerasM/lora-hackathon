@@ -27,7 +27,7 @@ export default {
       if(!this.dev) { return '' }
       console.log('iframeurl', this.mobile)
       var staticMap = this.mobile ? 'dynamic': 'static'
-      return `http://192.168.18.177:5002/location_map_${staticMap}?device=${this.dev}`
+      return `http://localhost:5002/location_map_${staticMap}?device=${this.dev}`
       //return staticMap
     }
   },

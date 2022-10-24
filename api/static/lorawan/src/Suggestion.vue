@@ -42,7 +42,7 @@ export default {
       console.log('sugg', f)
     },
     dev: async function () {
-      var res = await fetch('http://192.168.18.177:5002/get_suggestions')
+      var res = await fetch('http://localhost:5002/get_suggestions')
       var json = await res.json() 
       console.log(json)
       this.sugg = json

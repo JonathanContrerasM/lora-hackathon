@@ -40,7 +40,7 @@ export default {
     'dev': async function () {
       try {
         console.log('when dev changed', this.dev)
-        var yt = await fetch(`http://192.168.18.177:5002/youtube_feed?device=${this.dev}`)
+        var yt = await fetch(`http://localhost:5002/youtube_feed?device=${this.dev}`)
         var ytjson = await yt.json()
         console.log(ytjson)
         ytjson = ytjson.map (e => {
@@ -54,7 +54,7 @@ export default {
       }
 
       try {
-        var twitter = await fetch(`http://192.168.18.177:5002/twitter_feed?device=${this.dev}`)
+        var twitter = await fetch(`http://localhost:5002/twitter_feed?device=${this.dev}`)
         var twjson = await twitter.json()
         console.log(twjson)
         this.twurl = twjson
@@ -63,7 +63,7 @@ export default {
       }
 
       try {
-        var weather = await fetch(`http://192.168.18.177:5002/get_weather?device=${this.dev}`)
+        var weather = await fetch(`http://localhost:5002/get_weather?device=${this.dev}`)
         var weatherjson = await weather.json()
         console.log(weatherjson)
         this.weather = weatherjson
