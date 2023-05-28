@@ -12,6 +12,9 @@
         <what @findings="logfindings"></what>
         <when :dev="selectedDevice"></when>
         <suggestion :dev="selectedDevice" :findings="findings"></suggestion>
+        <LinkedIn></LinkedIn>
+        <LinkedIn_Test></LinkedIn_Test>
+
     </div>
 </template>
 
@@ -21,6 +24,8 @@ import Suggestion from './Suggestion.vue'
 import Where from './Where.vue'
 import When from './When.vue'
 import What from './What.vue'
+import LinkedIn from "./LinkedIn.vue";
+import LinkedIn_Test from "@/LinkedIn_Test.vue";
 
 
 export default {
@@ -38,7 +43,9 @@ export default {
         what: What,
         where: Where,
         suggestion: Suggestion,
-        when: When
+        when: When,
+        LinkedIn: LinkedIn,
+        LinkedIn_Test: LinkedIn_Test
     },
     methods: {
         logfindings: function (findings) {
