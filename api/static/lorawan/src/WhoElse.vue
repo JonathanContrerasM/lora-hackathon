@@ -5,8 +5,8 @@
       <button class="custom-button" @click="sendRequest" :disabled="isButtonClicked">Send Request</button>
     </div>
     <div v-if="isDataLoaded">
-      <div class="profile-card" v-for="(profile, index) in data.slice(0, 10)" :key="index">
-        <img :src="profile.ImageLink" alt="Profile Image" class="profile-image">
+      <div class="profile-card" v-for="(profile, index) in data.slice(0, 9)" :key="index">
+      <img :src="profile.ImageLink" alt="Profile Image" class="profile-image">
         <h3>{{ profile.Name }}</h3>
         <p><strong>Collaborations:</strong> {{ profile.Collaborations }}</p>
         <p><strong>GitHub Match:</strong> {{ profile.GitHub_Match }}</p>
@@ -18,6 +18,7 @@
     </div>
     <div v-else-if="isButtonClicked" class="loading-text">
       <p>Loading data... This is might take up to 15 Minutes</p>
+      <p>Time passed: {{ Math.floor(timePassed / 60) }} minutes and {{ timePassed % 60 }} seconds</p>
     </div>
   </div>
 </template>
@@ -35,6 +36,8 @@ export default {
       data: null,
       isDataLoaded: false,
       isButtonClicked: false,
+      timePassed: 0, // New data property to store time passed
+      timer: null // New data property to store the interval
     };
   },
 
@@ -45,18 +48,31 @@ export default {
         key_company: 'Armasuisse'
       };
       this.isButtonClicked = true; // Set flag to true when button is clicked
+      this.startTimer(); // Start the timer
 
       axios.post('http://localhost:5001/full', inputData)
           .then(response => {
             // Set the fetched data and update the flag
             this.data = response.data.result;
             this.isDataLoaded = true;
+            this.stopTimer(); // Stop the timer when data is loaded
           })
           .catch(error => {
             // Handle any errors
             console.error(error);
           });
     },
+    startTimer() {
+      // This function will create an interval that increments the timePassed value every second
+      this.timer = setInterval(() => {
+        this.timePassed++;
+      }, 1000);
+    },
+
+    stopTimer() {
+      // This function will clear the interval, effectively stopping the timer
+      clearInterval(this.timer);
+    }
   }
 }
 </script>
