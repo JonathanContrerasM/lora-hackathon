@@ -7,6 +7,7 @@
       <a href="#when">When+Where</a>
       <a href="#suggestion">Suggestion</a>
       <a href="#LinkedinData">Person</a>
+      <a href="#WhoElse">Who Else</a>
 
     </nav>
     <home @device="log" @mobile="logmobile"></home>
@@ -15,8 +16,7 @@
     <when :dev="selectedDevice"></when>
     <suggestion :dev="selectedDevice" :findings="findings"></suggestion>
     <LinkedinData id="LinkedinData"></LinkedinData>
-    <CompanyData></CompanyData>
-    <WhoElse></WhoElse>
+    <WhoElse id="WhoElse"></WhoElse>
   </div>
 </template>
 
@@ -27,7 +27,6 @@ import Where from './Where.vue'
 import When from './When.vue'
 import What from './What.vue'
 import LinkedinData from "./LinkedinData.vue";
-import CompanyData from "./CompanyData.vue";
 import WhoElse from "@/WhoElse.vue";
 
 
@@ -48,7 +47,6 @@ export default {
     suggestion: Suggestion,
     when: When,
     LinkedinData: LinkedinData,
-    CompanyData: CompanyData,
     WhoElse: WhoElse
 
   },

@@ -2,10 +2,20 @@
   <div class="company-profile">
     <div class="header-button-container">
       <h2>Load Company Profile</h2>
-      <button class="custom-button" @click="sendRequest" :disabled="isButtonClicked">Send Request</button>
+      <div class="input-button-wrapper">
+        <input type="text" v-model="inputName" placeholder="Name" class="input-field">
+        <input type="text" v-model="inputCompany" placeholder="Company" class="input-field">
+        <button class="custom-button"
+                @click="sendRequest"
+                :disabled="isButtonClicked || !inputName || !inputCompany">
+          Send Request
+        </button>
+      </div>
     </div>
 
-    <div v-if="isButtonClicked && !isDataLoaded">Loading...</div>
+    <div v-if="isButtonClicked && !isDataLoaded" class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
 
     <div v-if="isDataLoaded && data">
       <p><strong>Name:</strong> {{ data.Name }}</p>
@@ -19,7 +29,9 @@
         <div class="general-info">
           <p><strong>Project Duration:</strong> {{ project['General Information']['Project Duration'] }}</p>
           <p><strong>Reference:</strong> {{ project['General Information'].Reference }}</p>
-          <p><strong>Source of Funding:</strong> {{ project['General Information']['Source of funding'] }}</p>
+          <div class="source-of-funding">
+            <p><strong>Source of Funding:</strong>{{ project['General Information']['Source of funding'] }}</p>
+          </div>
         </div>
         <div class="partners">
           <p><strong>Project Partners:</strong></p>
@@ -50,11 +62,29 @@ import axios from "axios";
 
 export default {
   name: 'CompanyProfile',
+  props: {
+    linkedInName: {
+      type: String,
+      default: '',
+    },
+    linkedInCompany: {
+      type: String,
+      default: '',
+    }
+  },
+  watch: {
+    linkedInName(newName) {
+      this.inputName = newName;
+    },
+    linkedInCompany(newCompany) {
+      this.inputCompany = newCompany;
+    },
+  },
   methods: {
     sendRequest() {
       const inputData = {
-        name: 'Alberto Huertas',
-        company: 'University of Zurich'
+        name: this.inputName,
+        company: this.inputCompany
       };
       this.isButtonClicked = true; // Set flag to true when button is clicked
 
@@ -76,9 +106,12 @@ export default {
       data: null,
       isDataLoaded: false,
       isButtonClicked: false,
+      inputName: this.linkedInName, // default values from props
+      inputCompany: this.linkedInCompany, // default values from props
     };
   }
 }
+
 </script>
 
 
@@ -96,7 +129,7 @@ export default {
 
 .header-button-container {
   display: flex;
-  align-items: baseline; /* Adjust the alignment to "baseline" */
+  align-items: center; /* Adjust the alignment to "baseline" */
   justify-content: space-between;
 }
 
@@ -120,6 +153,30 @@ export default {
 .company-profile p {
   margin: 0;
   font-size: 16px;
+}
+
+.input-button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.input-field {
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+  max-width: 200px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.source-of-funding {
+  background-color: #c93535; /* Light grey background */
+  color: #343a40; /* Dark grey font color */
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .company-profile strong {

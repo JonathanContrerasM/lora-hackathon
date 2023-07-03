@@ -8,34 +8,34 @@
     <div class="weight-sliders">
       <div class="weight-slider">
         <label for="collab-exists-weight">Collab Exists Weight: {{ collabExistsWeight }}</label>
-        <input id="collab-exists-weight" type="range" v-model.number="collabExistsWeight" min="0" max="1" step="0.01"/>
+        <input id="collab-exists-weight" type="range" v-model.number="collabExistsWeight" min="0" max="5" step="0.01"/>
       </div>
 
       <div class="weight-slider">
         <label for="collab-count-weight">Collab Count Weight: {{ collabCountWeight }}</label>
-        <input id="collab-count-weight" type="range" v-model.number="collabCountWeight" min="0" max="1" step="0.01"/>
+        <input id="collab-count-weight" type="range" v-model.number="collabCountWeight" min="0" max="5" step="0.01"/>
       </div>
 
       <div class="weight-slider">
         <label for="mention-exists-weight">Mention Exists Weight: {{ mentionExistsWeight }}</label>
-        <input id="mention-exists-weight" type="range" v-model.number="mentionExistsWeight" min="0" max="1"
+        <input id="mention-exists-weight" type="range" v-model.number="mentionExistsWeight" min="0" max="5"
                step="0.01"/>
       </div>
 
       <div class="weight-slider">
         <label for="mention-count-weight">Mention Count Weight: {{ mentionCountWeight }}</label>
-        <input id="mention-count-weight" type="range" v-model.number="mentionCountWeight" min="0" max="1" step="0.01"/>
+        <input id="mention-count-weight" type="range" v-model.number="mentionCountWeight" min="0" max="5" step="0.01"/>
       </div>
 
       <div class="weight-slider">
         <label for="institution-match-weight">Institution Match Weight: {{ institutionMatchWeight }}</label>
-        <input id="institution-match-weight" type="range" v-model.number="institutionMatchWeight" min="0" max="1"
+        <input id="institution-match-weight" type="range" v-model.number="institutionMatchWeight" min="0" max="5"
                step="0.01"/>
       </div>
 
       <div class="weight-slider">
         <label for="github-match-weight">Github Match Weight: {{ githubMatchWeight }}</label>
-        <input id="github-match-weight" type="range" v-model.number="githubMatchWeight" min="0" max="1" step="0.01"/>
+        <input id="github-match-weight" type="range" v-model.number="githubMatchWeight" min="0" max="5" step="0.01"/>
       </div>
 
       <div class="weight-slider">
@@ -43,7 +43,7 @@
             publicationElectoSenseWeight
           }}</label>
         <input id="publication-electosense-weight" type="range" v-model.number="publicationElectoSenseWeight" min="0"
-               max="1" step="0.01"/>
+               max="5" step="0.01"/>
       </div>
 
       <button @click="calculateMatchScores" :disabled="!data">Recalculate</button>
@@ -67,10 +67,15 @@
       </div>
     </div>
 
-    <div v-else-if="isButtonClicked" class="loading-text">
-      <p>Loading data... This is might take up to 15 Minutes</p>
-      <p>Time passed: {{ Math.floor(timePassed / 60) }} minutes and {{ timePassed % 60 }} seconds</p>
+    <div v-else-if="isButtonClicked" class="loading-container">
+      <div class="loading-spinner"></div>
+      <div class="spinner"></div>
+      <div class="loading-text">
+        <p>Loading data... This might take up to 15 minutes</p>
+        <p>Time passed: {{ Math.floor(timePassed / 60) }} minutes and {{ timePassed % 60 }} seconds</p>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -90,13 +95,13 @@ export default {
       timePassed: 0,
       timer: null,
       defaultImage: default_img,
-      collabExistsWeight: 0.5,
-      collabCountWeight: 0.5,
-      mentionExistsWeight: 0.5,
-      mentionCountWeight: 0.5,
-      institutionMatchWeight: 0.5,
-      githubMatchWeight: 0.5,
-      publicationElectoSenseWeight: 0.5,
+      collabExistsWeight: 3.9,
+      collabCountWeight: 0.85,
+      mentionExistsWeight: 1.16,
+      mentionCountWeight: 0.48,
+      institutionMatchWeight: 1.79,
+      githubMatchWeight: 1.21,
+      publicationElectoSenseWeight: 0.88,
     };
   },
   computed: {
@@ -135,7 +140,8 @@ export default {
     sendRequest() {
       const inputData = {
         name: 'Alberto Huertas',
-        key_company: 'Armasuisse'
+        key_company: 'Armasuisse',
+        event_name: 'LoRa Hackathon 2022'
       };
       this.isButtonClicked = true;
       this.startTimer();
@@ -264,10 +270,19 @@ export default {
   align-items: flex-start;
 }
 
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .loading-text {
+  margin-top: 2vh;
   font-size: 1.2em;
   font-weight: bold;
   color: #3498db;
+  text-align: center;
 }
 
 </style>
